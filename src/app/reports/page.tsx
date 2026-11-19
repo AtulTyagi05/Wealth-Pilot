@@ -4,6 +4,7 @@ import { FileDown, FileSpreadsheet, CalendarPlus, BarChart3, LineChart as LineIc
 import { useFinanceStore } from "@/store/useFinanceStore";
 import { useMoney, useOverview } from "@/store/useOverview";
 import { exportExcel, exportPdf } from "@/lib/reports/export";
+import { STANDALONE } from "@/lib/runtime";
 import type { MonthlySnapshot } from "@/lib/types";
 import { Button, Callout, Card, CardHeader, Disclaimer, Empty, PageHeader, Progress, Segmented, Stat } from "@/components/ui";
 import { DonutChart, GroupedBars, TrendLines } from "@/components/charts";
@@ -58,8 +59,10 @@ export default function ReportsPage() {
     <>
       <PageHeader title="Financial Reports" subtitle="Track trends over time and export reports for your records." action={<>
         <Button variant="secondary" onClick={() => { save(current); setMsg(`Saved snapshot for ${label(current.month)}.`); }}><CalendarPlus className="size-4" /> Record this month</Button>
-        <Button variant="secondary" disabled={!!busy || customInvalid || !rows.length} onClick={() => run("xlsx")}><FileSpreadsheet className="size-4" /> {busy === "xlsx" ? "Exporting…" : "Excel"}</Button>
-        <Button disabled={!!busy || customInvalid || !rows.length} onClick={() => run("pdf")}><FileDown className="size-4" /> {busy === "pdf" ? "Exporting…" : "PDF"}</Button>
+        {!STANDALONE && <>
+          <Button variant="secondary" disabled={!!busy || customInvalid || !rows.length} onClick={() => run("xlsx")}><FileSpreadsheet className="size-4" /> {busy === "xlsx" ? "Exporting…" : "Excel"}</Button>
+          <Button disabled={!!busy || customInvalid || !rows.length} onClick={() => run("pdf")}><FileDown className="size-4" /> {busy === "pdf" ? "Exporting…" : "PDF"}</Button>
+        </>}
       </>} />
 
       <div className="mb-4 flex flex-wrap items-center gap-3">

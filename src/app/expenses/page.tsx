@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Plus, Trash2, Pencil, Check, X, Receipt, Lightbulb, Wallet, PiggyBank, TrendingUp, Home, ShoppingCart, Zap, Car, HeartPulse, BookOpen, CreditCard, ShoppingBag, Plane, MoreHorizontal, Tag } from "lucide-react";
 import { useFinanceStore } from "@/store/useFinanceStore";
 import { useMoney, useOverview } from "@/store/useOverview";
-import { Badge, Button, Callout, Card, CardHeader, Disclaimer, Empty, PageHeader, Stat, cn } from "@/components/ui";
+import { Badge, Button, Callout, Card, CardHeader, ConfirmButton, Disclaimer, Empty, PageHeader, Stat, cn } from "@/components/ui";
 import { BarList, DonutChart } from "@/components/charts";
 import { uid } from "@/components/profile/editors";
 import type { ExpenseCategory } from "@/lib/types";
@@ -114,7 +114,7 @@ function Row({ e, income, onSave, onDelete }: { e: ExpenseCategory; income: numb
               <div className="text-xs text-muted">{income > 0 ? ((e.amount / income) * 100).toFixed(1) : 0}% of income</div>
             </button>
             <Button size="sm" variant="ghost" className="hidden sm:inline-flex" onClick={() => setEditing(true)} aria-label={`Edit ${e.name}`}><Pencil className="size-4" /></Button>
-            <Button size="sm" variant="ghost" onClick={() => { if (confirm(`Delete "${e.name}"?`)) onDelete(); }} aria-label={`Delete ${e.name}`}><Trash2 className="size-4" /></Button>
+            <ConfirmButton size="sm" variant="ghost" onConfirm={onDelete} confirmLabel="Delete?" aria-label={`Delete ${e.name}`}><Trash2 className="size-4" /></ConfirmButton>
           </>
         )}
       </div>

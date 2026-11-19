@@ -1,7 +1,7 @@
 "use client";
 import clsx from "clsx";
 import { Info, AlertTriangle, CheckCircle2, type LucideIcon } from "lucide-react";
-import { useId, useState, type ReactNode } from "react";
+import { useEffect, useId, useState, type ReactNode } from "react";
 
 export const cn = clsx;
 
@@ -249,5 +249,23 @@ export function Empty({ icon: Icon, title, text, action }: { icon: LucideIcon; t
       <p className="mt-1 max-w-sm text-sm text-ink-2">{text}</p>
       {action && <div className="mt-4">{action}</div>}
     </div>
+  );
+}
+
+/**
+ * A button that asks for a second click instead of a browser confirm() dialog
+ * (which is blocked in embedded pages). Resets after a few seconds.
+ */
+export function ConfirmButton({ onConfirm, confirmLabel = "Click again to confirm", children, ...rest }: Omit<React.ComponentProps<typeof Button>, "onClick"> & { onConfirm: () => void; confirmLabel?: string }) {
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    if (!armed) return;
+    const t = setTimeout(() => setArmed(false), 4000);
+    return () => clearTimeout(t);
+  }, [armed]);
+  return (
+    <Button {...rest} variant={armed ? "danger" : rest.variant} aria-live="polite" onClick={() => { if (armed) { setArmed(false); onConfirm(); } else setArmed(true); }}>
+      {armed ? confirmLabel : children}
+    </Button>
   );
 }

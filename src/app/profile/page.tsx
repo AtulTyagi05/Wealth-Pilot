@@ -5,7 +5,7 @@ import { useFinanceStore } from "@/store/useFinanceStore";
 import { useMoney, useOverview } from "@/store/useOverview";
 import { COUNTRIES } from "@/lib/locale/countries";
 import { validateProfile } from "@/lib/validation";
-import { Button, Callout, Card, CardHeader, NumberInput, PageHeader, Select, TextInput, Toggle } from "@/components/ui";
+import { Button, Callout, Card, CardHeader, ConfirmButton, NumberInput, PageHeader, Select, TextInput, Toggle } from "@/components/ui";
 import { GoalEditor, IncomeEditor, LiabilityEditor, RiskPicker } from "@/components/profile/editors";
 import { AccountCard } from "@/components/profile/AccountCard";
 import { useSession } from "@/store/useSession";
@@ -77,8 +77,8 @@ export default function ProfilePage() {
       <Card className="mt-4">
         <CardHeader icon={Database} title="Your data" subtitle={signedIn ? "Changes save automatically to your account. Resetting also clears the plan saved in your account." : "Data is stored only in this browser on this device."} />
         <div className="flex flex-wrap gap-2">
-          <Button variant="secondary" onClick={() => { if (confirm("Replace your data with the ₹1 lakh sample profile?")) loadDemo(); }}><Sparkles className="size-4" /> Load sample data</Button>
-          <Button variant="danger" onClick={() => { if (confirm(signedIn ? "This clears your plan on this device and in your account. Continue?" : "This permanently deletes all your data from this device. Continue?")) { resetAll(); router.push("/"); } }}><RotateCcw className="size-4" /> Reset all data</Button>
+          <ConfirmButton variant="secondary" onConfirm={loadDemo} confirmLabel="Replace my data with the sample?"><Sparkles className="size-4" /> Load sample data</ConfirmButton>
+          <ConfirmButton variant="danger" onConfirm={() => { resetAll(); router.push("/"); }} confirmLabel={signedIn ? "Click again: clears this device and your account" : "Click again: deletes all data on this device"}><RotateCcw className="size-4" /> Reset all data</ConfirmButton>
         </div>
       </Card>
     </>

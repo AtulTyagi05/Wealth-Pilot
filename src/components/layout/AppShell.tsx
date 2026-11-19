@@ -68,7 +68,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         {navList}
         <div className="mt-auto rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 p-4">
           <div className="text-sm font-semibold text-ink">Your data stays private</div>
-          <p className="mt-1 text-xs text-ink-2">{session.status === "user" ? "Encrypted and saved to your account." : "Stored only on this device. Log in to back it up securely."}</p>
+          <p className="mt-1 text-xs text-ink-2">{session.status === "user" ? "Encrypted and saved to your account." : session.status === "disabled" ? "Stored only in this browser. Nobody else can see it." : "Stored only on this device. Log in to back it up securely."}</p>
         </div>
       </aside>
 

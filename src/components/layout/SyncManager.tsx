@@ -4,6 +4,7 @@ import { accountApi, ApiError } from "@/lib/api/account";
 import type { SyncedState } from "@/lib/stateSchema";
 import { useFinanceStore } from "@/store/useFinanceStore";
 import { useSession } from "@/store/useSession";
+import { STANDALONE } from "@/lib/runtime";
 
 const pick = (s: ReturnType<typeof useFinanceStore.getState>): SyncedState => ({
   onboarded: s.onboarded,
@@ -24,6 +25,7 @@ export function useAccountSync() {
 
   // 1. Resolve who is logged in.
   useEffect(() => {
+    if (STANDALONE) { useSession.getState().set({ status: "disabled", user: null }); return; }
     accountApi.me()
       .then((r) => useSession.getState().set({ status: !r.accounts ? "disabled" : r.user ? "user" : "guest", user: r.user }))
       .catch(() => useSession.getState().set({ status: "disabled", user: null, sync: "offline" }));

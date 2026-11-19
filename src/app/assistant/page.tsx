@@ -7,6 +7,7 @@ import { useOverview } from "@/store/useOverview";
 import { localProvider } from "@/lib/assistant/engine";
 import { AssistantUnavailable, askRemote, toolLabel } from "@/lib/assistant/remote";
 import { Badge, Button, Card, PageHeader, cn } from "@/components/ui";
+import { STANDALONE } from "@/lib/runtime";
 
 const SUGGESTIONS = [
   "How much should I save every month?",
@@ -48,7 +49,7 @@ export default function AssistantPage() {
   const [busy, setBusy] = useState(false);
   const [live, setLive] = useState("");
   const [tool, setTool] = useState<string | null>(null);
-  const [aiAvailable, setAiAvailable] = useState(true);
+  const [aiAvailable, setAiAvailable] = useState(!STANDALONE);
   const [offlineReason, setOfflineReason] = useState<"not_configured" | "unauthenticated">("not_configured");
   const endRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -103,7 +104,9 @@ export default function AssistantPage() {
         <p className="-mt-3 mb-4 text-xs text-ink-2">
           {offlineReason === "unauthenticated"
             ? <><Link href="/login" className="font-medium text-brand-strong hover:underline">Log in</Link> to chat with the AI assistant. Until then, answers come from the built-in calculator, using your real numbers.</>
-            : "The AI model isn't configured on this server, so answers come from the built-in calculator. They still use your real numbers."}
+            : STANDALONE
+              ? "This shared version answers with the built-in calculator, using the numbers you've entered."
+              : "The AI model isn't configured on this server, so answers come from the built-in calculator. They still use your real numbers."}
         </p>
       )}
       <Card className="flex h-[calc(100vh-15rem)] min-h-[480px] flex-col p-0 lg:h-[calc(100vh-13rem)]">
