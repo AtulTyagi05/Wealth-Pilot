@@ -6,7 +6,9 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import pg from "pg";
 
-const url = process.env.DATABASE_URL;
+// Prefer a direct (non-pooled) connection: migrations take a session-level advisory lock,
+// which transaction-mode poolers such as Neon's do not support.
+const url = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
 if (!url) {
   console.error("DATABASE_URL is not set");
   process.exit(1);
