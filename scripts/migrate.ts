@@ -10,6 +10,11 @@ import pg from "pg";
 // which transaction-mode poolers such as Neon's do not support.
 const url = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
 if (!url) {
+  // On Vercel, allow a first deploy before a database is attached: the app then runs device-only.
+  if (process.env.VERCEL) {
+    console.warn("DATABASE_URL is not set; skipping migrations (accounts stay disabled until a database is added)");
+    process.exit(0);
+  }
   console.error("DATABASE_URL is not set");
   process.exit(1);
 }
