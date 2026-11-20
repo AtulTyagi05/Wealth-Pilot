@@ -50,3 +50,24 @@ const html = `<title>Wealth Pilot</title>
 `;
 writeFileSync("dist/wealth-pilot.html", html);
 console.log(`dist/wealth-pilot.html  ${(html.length / 1024).toFixed(0)} KB`);
+
+// A complete document for static hosting (GitHub Pages serves docs/ on the main branch).
+const favicon = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#0e9f6e"/><path d="M5 16l4-4 3 2.5 6-7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+const page = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e9f6e">
+<meta property="og:title" content="Wealth Pilot — Smart Salary & Wealth Planner">
+<meta property="og:description" content="Find out exactly how to split your salary between expenses, savings, investments and retirement. Free, private, no sign-up.">
+<meta property="og:type" content="website">
+<link rel="icon" href="${favicon}">
+${html.replace("<title>Wealth Pilot</title>", "<title>Wealth Pilot — Smart Salary & Wealth Planner</title>").replace('<div id="root"></div>', "</head>\n<body>\n<div id=\"root\"></div>")}
+</body>
+</html>
+`;
+mkdirSync("docs", { recursive: true });
+writeFileSync("docs/index.html", page);
+writeFileSync("docs/.nojekyll", "");
+console.log(`docs/index.html  ${(page.length / 1024).toFixed(0)} KB (for GitHub Pages)`);
